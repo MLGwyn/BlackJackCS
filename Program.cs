@@ -64,13 +64,54 @@ namespace BlackJackCS
             dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
             deckOfCards.RemoveAt(deckOfCards.Count - 1);
 
+            var playerHandValue = 0;
+            foreach (var card in playerHand)
+            {
+                playerHandValue += card.Points;
+            }
+
+            var dealerHandValue = dealerHand[0].Points + dealerHand[1].Points;
+
+            Console.WriteLine();
             Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
             foreach (var card in playerHand)
             {
                 Console.WriteLine(card.Name);
             }
-            Console.WriteLine($"Dealer has {dealerHand.Count} cards. ");
-            Console.WriteLine($"There are {deckOfCards.Count} cards in the deck. ");
+            Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+            // Console.WriteLine($"Dealer hand is worth {dealerHandValue} points. ");
+            // Console.WriteLine($"Dealer has {dealerHand.Count} cards. ");
+            // Console.WriteLine($"There are {deckOfCards.Count} cards in the deck. ");
+
+            Console.WriteLine();
+            Console.WriteLine("Would you like to (H)it or (S)tand? ");
+
+            var response = Console.ReadLine();
+
+            if (response == "H")
+            {
+                playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+                Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
+                foreach (var card in playerHand)
+                {
+                    Console.WriteLine(card.Name);
+                }
+                playerHandValue = 0;
+                foreach (var card in playerHand)
+                {
+                    playerHandValue += card.Points;
+                }
+                Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+            }
+
+
+
+
+
+
+
+
 
 
 

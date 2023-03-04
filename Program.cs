@@ -70,7 +70,13 @@ namespace BlackJackCS
                 playerHandValue += card.Points;
             }
 
-            var dealerHandValue = dealerHand[0].Points + dealerHand[1].Points;
+            // var dealerHandValue = dealerHand[0].Points + dealerHand[1].Points;
+
+            var dealerHandValue = 0;
+            foreach (var card in dealerHand)
+            {
+                dealerHandValue += card.Points;
+            }
 
             Console.WriteLine();
             Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
@@ -86,9 +92,9 @@ namespace BlackJackCS
             Console.WriteLine();
             Console.WriteLine("Would you like to (H)it or (S)tand? ");
 
-            var response = Console.ReadLine();
+            string response = Console.ReadLine().ToUpper();
 
-            if (response == "H")
+            while (response == "H")
             {
                 playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
                 deckOfCards.RemoveAt(deckOfCards.Count - 1);
@@ -103,7 +109,62 @@ namespace BlackJackCS
                     playerHandValue += card.Points;
                 }
                 Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+                if (playerHandValue > 21)
+                {
+                    Console.WriteLine($"BUST! You have over 21 points. Dealer wins. ");
+                    break;
+                }
+                else
+                if (playerHandValue == 21)
+                {
+                    Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
+                    break;
+                };
+                Console.WriteLine();
+                Console.WriteLine("Would you like to (H)it or (S)tand? ");
+
+                response = Console.ReadLine().ToUpper();
+
+
             }
+            if (response == "S")
+            {
+                Console.WriteLine($"Player Stands with hand worth {playerHandValue} points.\n\nPlayers turn is over.\n\nAction goes to dealer.\n ");
+            }
+            Console.WriteLine("Dealer has ");
+            foreach (var card in dealerHand)
+            {
+                Console.WriteLine(card.Name);
+            }
+            Console.WriteLine($"\nDealers hand is worth {dealerHandValue} points.\n ");
+            while (dealerHandValue < 17)
+            {
+                dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+                Console.WriteLine("\nDealer has added another card.\nDealers hand is now ");
+                foreach (var card in dealerHand)
+                {
+                    Console.WriteLine(card.Name);
+                }
+                dealerHandValue = 0;
+                foreach (var card in dealerHand)
+                {
+                    dealerHandValue += card.Points;
+                }
+                Console.WriteLine($"Dealers hand is worth {dealerHandValue} points.\n ");
+                if (dealerHandValue > 21)
+                {
+                    Console.WriteLine($"BUST! Dealer has over 21 points.\nPlayer wins.\n ");
+                    break;
+                }
+                else
+                if (dealerHandValue == 21)
+                {
+                    Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
+                    break;
+                };
+            }
+
 
 
 

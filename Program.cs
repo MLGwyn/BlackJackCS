@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BlackJackCS
 {
@@ -36,6 +37,8 @@ namespace BlackJackCS
                     deckOfCards.Add(newCard);
                 }
             }
+
+            // something here to start loop?
 
             var numberOfCards = deckOfCards.Count;
             for (var rightIndex = numberOfCards - 1; rightIndex > 0; rightIndex--)
@@ -131,39 +134,243 @@ namespace BlackJackCS
             {
                 Console.WriteLine($"Player Stands with hand worth {playerHandValue} points.\n\nPlayers turn is over.\n\nAction goes to dealer.\n ");
             }
-            Console.WriteLine("Dealer has ");
-            foreach (var card in dealerHand)
+            if (playerHandValue <= 21)
             {
-                Console.WriteLine(card.Name);
-            }
-            Console.WriteLine($"\nDealers hand is worth {dealerHandValue} points.\n ");
-            while (dealerHandValue < 17)
-            {
-                dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
-                deckOfCards.RemoveAt(deckOfCards.Count - 1);
-                Console.WriteLine("\nDealer has added another card.\nDealers hand is now ");
+                Console.WriteLine("Dealer has ");
                 foreach (var card in dealerHand)
                 {
                     Console.WriteLine(card.Name);
                 }
+                Console.WriteLine($"\nDealers hand is worth {dealerHandValue} points.\n ");
+                while (dealerHandValue < 17)
+                {
+                    dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                    deckOfCards.RemoveAt(deckOfCards.Count - 1);
+                    Console.WriteLine("Dealer has added another card.\n\nDealers hand is now ");
+                    foreach (var card in dealerHand)
+                    {
+                        Console.WriteLine(card.Name);
+                    }
+                    dealerHandValue = 0;
+                    foreach (var card in dealerHand)
+                    {
+                        dealerHandValue += card.Points;
+                    }
+                    Console.WriteLine($"Dealers hand is worth {dealerHandValue} points.\n ");
+                    if (dealerHandValue > 21)
+                    {
+                        Console.WriteLine($"BUST! Dealer has over 21 points.\n\nPlayer wins by default.\n ");
+                        break;
+                    }
+                    else
+                    if (dealerHandValue == 21)
+                    {
+                        Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
+                        break;
+                    }
+                    else
+                    if (dealerHandValue == playerHandValue)
+                    {
+                        Console.WriteLine("\nTIE! Dealer wins. ");
+                        break;
+
+                    }
+                }
+                if (playerHandValue == dealerHandValue)
+                {
+                    Console.WriteLine("\nTIE! Dealer wins. ");
+                }
+            }
+            var compareHands = new List<int>() { playerHandValue, dealerHandValue };
+            // var winningHand = compareHands.ClosestTo(21);
+            var winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
+
+            if (playerHandValue == winningHand && playerHandValue < 21)
+            {
+                Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+            }
+            else if (dealerHandValue == winningHand && dealerHandValue < 21)
+            {
+                Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
+            }
+            else if (dealerHandValue == playerHandValue)
+            {
+                Console.WriteLine("\nTIE! Dealer wins. ");
+            }
+
+            Console.WriteLine("\nWould you like to play again? [Y/N]\n ");
+
+            var playAgain = Console.ReadLine().ToUpper();
+
+            if (playAgain == "Y")
+            {
+                numberOfCards = deckOfCards.Count;
+                for (var rightIndex = numberOfCards - 1; rightIndex > 0; rightIndex--)
+                {
+                    var randomNumberGenerator = new Random(); //create a new random number generator object
+                    var leftIndex = randomNumberGenerator.Next(rightIndex); //generate a new random number between 0 and rightIndex and save that number as leftIndex
+                    var leftCard = deckOfCards[leftIndex]; // create temporary leftCard, which saves a copy of the original card at [leftIndex]
+                    var rightCard = deckOfCards[rightIndex]; // create temporary leftCard, which saves a copy of the original card at [leftIndex]
+                    deckOfCards[rightIndex] = leftCard; // replace the card at [rightIndex] with leftCard
+                    deckOfCards[leftIndex] = rightCard; // replace the card at [leftIndex] with rightCard
+                }
+
+                playerHand = new List<Cards>();
+                dealerHand = new List<Cards>();
+                // var cardToMove;
+
+                playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+
+                dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+
+                playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+
+                dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                deckOfCards.RemoveAt(deckOfCards.Count - 1);
+
+                playerHandValue = 0;
+                foreach (var card in playerHand)
+                {
+                    playerHandValue += card.Points;
+                }
+
+                // var dealerHandValue = dealerHand[0].Points + dealerHand[1].Points;
+
                 dealerHandValue = 0;
                 foreach (var card in dealerHand)
                 {
                     dealerHandValue += card.Points;
                 }
-                Console.WriteLine($"Dealers hand is worth {dealerHandValue} points.\n ");
-                if (dealerHandValue > 21)
+
+                Console.WriteLine();
+                Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
+                foreach (var card in playerHand)
                 {
-                    Console.WriteLine($"BUST! Dealer has over 21 points.\nPlayer wins.\n ");
-                    break;
+                    Console.WriteLine(card.Name);
                 }
-                else
-                if (dealerHandValue == 21)
+                Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+                // Console.WriteLine($"Dealer hand is worth {dealerHandValue} points. ");
+                // Console.WriteLine($"Dealer has {dealerHand.Count} cards. ");
+                // Console.WriteLine($"There are {deckOfCards.Count} cards in the deck. ");
+
+                Console.WriteLine();
+                Console.WriteLine("Would you like to (H)it or (S)tand? ");
+
+                response = Console.ReadLine().ToUpper();
+
+                while (response == "H")
                 {
-                    Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
-                    break;
-                };
+                    playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                    deckOfCards.RemoveAt(deckOfCards.Count - 1);
+                    Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
+                    foreach (var card in playerHand)
+                    {
+                        Console.WriteLine(card.Name);
+                    }
+                    playerHandValue = 0;
+                    foreach (var card in playerHand)
+                    {
+                        playerHandValue += card.Points;
+                    }
+                    Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+                    if (playerHandValue > 21)
+                    {
+                        Console.WriteLine($"BUST! You have over 21 points. Dealer wins. ");
+                        break;
+                    }
+                    else
+                    if (playerHandValue == 21)
+                    {
+                        Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
+                        break;
+                    };
+                    Console.WriteLine();
+                    Console.WriteLine("Would you like to (H)it or (S)tand? ");
+
+                    response = Console.ReadLine().ToUpper();
+
+
+                }
+                if (response == "S")
+                {
+                    Console.WriteLine($"Player Stands with hand worth {playerHandValue} points.\n\nPlayers turn is over.\n\nAction goes to dealer.\n ");
+                }
+                if (playerHandValue <= 21)
+                {
+                    Console.WriteLine("Dealer has ");
+                    foreach (var card in dealerHand)
+                    {
+                        Console.WriteLine(card.Name);
+                    }
+                    Console.WriteLine($"\nDealers hand is worth {dealerHandValue} points.\n ");
+                    while (dealerHandValue < 17)
+                    {
+                        dealerHand.Add(deckOfCards[deckOfCards.Count - 1]);
+                        deckOfCards.RemoveAt(deckOfCards.Count - 1);
+                        Console.WriteLine("Dealer has added another card.\n\nDealers hand is now ");
+                        foreach (var card in dealerHand)
+                        {
+                            Console.WriteLine(card.Name);
+                        }
+                        dealerHandValue = 0;
+                        foreach (var card in dealerHand)
+                        {
+                            dealerHandValue += card.Points;
+                        }
+                        Console.WriteLine($"Dealers hand is worth {dealerHandValue} points.\n ");
+                        if (dealerHandValue > 21)
+                        {
+                            Console.WriteLine($"BUST! Dealer has over 21 points.\n\nPlayer wins by default.\n ");
+                            break;
+                        }
+                        else
+                        if (dealerHandValue == 21)
+                        {
+                            Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
+                            break;
+                        }
+                        else
+                        if (dealerHandValue == playerHandValue)
+                        {
+                            Console.WriteLine("\nTIE! Dealer wins. ");
+                            break;
+
+                        }
+                    }
+                    if (playerHandValue == dealerHandValue)
+                    {
+                        Console.WriteLine("\nTIE! Dealer wins. ");
+                    }
+                }
+                compareHands = new List<int>() { playerHandValue, dealerHandValue };
+                // var winningHand = compareHands.ClosestTo(21);
+                winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
+
+                if (playerHandValue == winningHand && playerHandValue < 21)
+                {
+                    Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+                }
+                else if (dealerHandValue == winningHand && dealerHandValue < 21)
+                {
+                    Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
+                }
+                else if (dealerHandValue == playerHandValue)
+                {
+                    Console.WriteLine("\nTIE! Dealer wins. ");
+                }
+
+                Console.WriteLine("\nWould you like to play again? [Y/N]\n ");
+
+                playAgain = Console.ReadLine().ToUpper();
             }
+
+
+
+
+
 
 
 

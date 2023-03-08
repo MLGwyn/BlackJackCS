@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-// using System.Linq;
 
 namespace BlackJackCS
 {
@@ -38,8 +37,6 @@ namespace BlackJackCS
                 }
             }
 
-            // something here to start loop?
-
             var numberOfCards = deckOfCards.Count;
             for (var rightIndex = numberOfCards - 1; rightIndex > 0; rightIndex--)
             {
@@ -53,7 +50,6 @@ namespace BlackJackCS
 
             var playerHand = new List<Cards>();
             var dealerHand = new List<Cards>();
-            // var cardToMove;
 
             playerHand.Add(deckOfCards[deckOfCards.Count - 1]);
             deckOfCards.RemoveAt(deckOfCards.Count - 1);
@@ -72,15 +68,11 @@ namespace BlackJackCS
             {
                 playerHandValue += card.Points;
             }
-
-            // var dealerHandValue = dealerHand[0].Points + dealerHand[1].Points;
-
             var dealerHandValue = 0;
             foreach (var card in dealerHand)
             {
                 dealerHandValue += card.Points;
             }
-
             Console.WriteLine();
             Console.WriteLine($"You have {playerHand.Count} cards. They are: ");
             foreach (var card in playerHand)
@@ -88,9 +80,6 @@ namespace BlackJackCS
                 Console.WriteLine(card.Name);
             }
             Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
-            // Console.WriteLine($"Dealer hand is worth {dealerHandValue} points. ");
-            // Console.WriteLine($"Dealer has {dealerHand.Count} cards. ");
-            // Console.WriteLine($"There are {deckOfCards.Count} cards in the deck. ");
 
             Console.WriteLine();
             Console.WriteLine("Would you like to (H)it or (S)tand? ");
@@ -127,10 +116,6 @@ namespace BlackJackCS
                 Console.WriteLine("Would you like to (H)it or (S)tand? ");
 
                 response = Console.ReadLine().ToUpper();
-
-
-
-
             }
             if (response == "S")
             {
@@ -173,27 +158,9 @@ namespace BlackJackCS
                     {
                         Console.WriteLine("\nTIE! Dealer wins. ");
                         break;
-
                     }
                 }
-
             }
-            // var compareHands = new List<int>() { playerHandValue, dealerHandValue };
-            // // var winningHand = compareHands.ClosestTo(21);
-            // var winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
-
-            // if (playerHandValue == winningHand && playerHandValue < 21 && playerHandValue != dealerHandValue)
-            // {
-            //     Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
-            // }
-            // if (dealerHandValue == winningHand && dealerHandValue < 21)
-            // {
-            //     Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
-            // }
-            // if (dealerHandValue == playerHandValue)
-            // {
-            //     Console.WriteLine("\nTIE! Dealer wins. ");
-            // }
             var playerCloseness = 21 - playerHandValue;
             var dealerCloseness = 21 - dealerHandValue;
             if (dealerCloseness < playerCloseness && dealerHandValue <= 21)
@@ -208,8 +175,6 @@ namespace BlackJackCS
             {
                 Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
             }
-
-
         }
         static void Main(string[] args)
         {
@@ -225,17 +190,6 @@ namespace BlackJackCS
                 Console.WriteLine("\nWould you like to play again? [Y/N]\n ");
                 playAgain = Console.ReadLine().ToUpper();
             }
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 }

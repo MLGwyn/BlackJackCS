@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+// using System.Linq;
 
 namespace BlackJackCS
 {
@@ -112,21 +112,23 @@ namespace BlackJackCS
                     playerHandValue += card.Points;
                 }
                 Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+                if (playerHandValue == 21)
+                {
+                    Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
+                    break;
+                }
                 if (playerHandValue > 21)
                 {
                     Console.WriteLine($"BUST! You have over 21 points. Dealer wins. ");
                     break;
                 }
-                else
-                if (playerHandValue == 21)
-                {
-                    Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
-                    break;
-                };
+
                 Console.WriteLine();
                 Console.WriteLine("Would you like to (H)it or (S)tand? ");
 
                 response = Console.ReadLine().ToUpper();
+
+
 
 
             }
@@ -162,13 +164,11 @@ namespace BlackJackCS
                         Console.WriteLine($"BUST! Dealer has over 21 points.\n\nPlayer wins by default.\n ");
                         break;
                     }
-                    else
                     if (dealerHandValue == 21)
                     {
                         Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
                         break;
                     }
-                    else
                     if (dealerHandValue == playerHandValue)
                     {
                         Console.WriteLine("\nTIE! Dealer wins. ");
@@ -176,20 +176,27 @@ namespace BlackJackCS
 
                     }
                 }
-                if (playerHandValue == dealerHandValue)
-                {
-                    Console.WriteLine("\nTIE! Dealer wins. ");
-                }
-            }
-            var compareHands = new List<int>() { playerHandValue, dealerHandValue };
-            // var winningHand = compareHands.ClosestTo(21);
-            var winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
 
-            if (playerHandValue == winningHand && playerHandValue < 21)
-            {
-                Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
             }
-            else if (dealerHandValue == winningHand && dealerHandValue < 21)
+            // var compareHands = new List<int>() { playerHandValue, dealerHandValue };
+            // // var winningHand = compareHands.ClosestTo(21);
+            // var winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
+
+            // if (playerHandValue == winningHand && playerHandValue < 21 && playerHandValue != dealerHandValue)
+            // {
+            //     Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+            // }
+            // if (dealerHandValue == winningHand && dealerHandValue < 21)
+            // {
+            //     Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
+            // }
+            // if (dealerHandValue == playerHandValue)
+            // {
+            //     Console.WriteLine("\nTIE! Dealer wins. ");
+            // }
+            var playerCloseness = 21 - playerHandValue;
+            var dealerCloseness = 21 - dealerHandValue;
+            if (dealerCloseness < playerCloseness && dealerHandValue <= 21)
             {
                 Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
             }
@@ -197,13 +204,43 @@ namespace BlackJackCS
             {
                 Console.WriteLine("\nTIE! Dealer wins. ");
             }
+            else if (playerHandValue <= 21)
+            {
+                Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+            }
+            else
+            {
+                Console.WriteLine("\nSomething I didn't think of happened. ");
+            }
 
             Console.WriteLine("\nWould you like to play again? [Y/N]\n ");
 
             var playAgain = Console.ReadLine().ToUpper();
 
-            if (playAgain == "Y")
+            while (playAgain == "Y")
             {
+
+                suits = new List<string>() { "♥️", "♣️", "♦️", "♠️" };
+                ranks = new List<string>() { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+                points = new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11 };
+
+                index = 0;
+
+                deckOfCards = new List<Cards>();
+
+                foreach (var currentSuit in suits)
+                {
+                    foreach (var currentRank in ranks)
+                    {
+                        var newCard = new Cards();
+                        newCard.Name = $"{currentRank} of {currentSuit}";
+                        newCard.Suit = currentSuit;
+                        newCard.Rank = currentRank;
+                        newCard.Points = points[index];
+                        index++;
+                        deckOfCards.Add(newCard);
+                    }
+                }
                 numberOfCards = deckOfCards.Count;
                 for (var rightIndex = numberOfCards - 1; rightIndex > 0; rightIndex--)
                 {
@@ -276,21 +313,22 @@ namespace BlackJackCS
                         playerHandValue += card.Points;
                     }
                     Console.WriteLine($"Your hand is worth {playerHandValue} points. ");
+                    if (playerHandValue == 21)
+                    {
+                        Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
+                        break;
+                    }
                     if (playerHandValue > 21)
                     {
                         Console.WriteLine($"BUST! You have over 21 points. Dealer wins. ");
                         break;
                     }
-                    else
-                    if (playerHandValue == 21)
-                    {
-                        Console.WriteLine("You've hit BLACKJACK!.\n\nAction goes to dealer.\n ");
-                        break;
-                    };
                     Console.WriteLine();
                     Console.WriteLine("Would you like to (H)it or (S)tand? ");
 
                     response = Console.ReadLine().ToUpper();
+
+
 
 
                 }
@@ -326,13 +364,13 @@ namespace BlackJackCS
                             Console.WriteLine($"BUST! Dealer has over 21 points.\n\nPlayer wins by default.\n ");
                             break;
                         }
-                        else
+
                         if (dealerHandValue == 21)
                         {
                             Console.WriteLine("Dealer hit BLACKJACK!.\n\nDealer wins.\n ");
                             break;
                         }
-                        else
+
                         if (dealerHandValue == playerHandValue)
                         {
                             Console.WriteLine("\nTIE! Dealer wins. ");
@@ -340,20 +378,16 @@ namespace BlackJackCS
 
                         }
                     }
-                    if (playerHandValue == dealerHandValue)
-                    {
-                        Console.WriteLine("\nTIE! Dealer wins. ");
-                    }
-                }
-                compareHands = new List<int>() { playerHandValue, dealerHandValue };
-                // var winningHand = compareHands.ClosestTo(21);
-                winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
 
-                if (playerHandValue == winningHand && playerHandValue < 21)
-                {
-                    Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
                 }
-                else if (dealerHandValue == winningHand && dealerHandValue < 21)
+                // compareHands = new List<int>() { playerHandValue, dealerHandValue };
+                // var winningHand = compareHands.ClosestTo(21);
+                // winningHand = compareHands.Aggregate((current, next) => Math.Abs((long)current - 21) < Math.Abs((long)next - 21) ? current : next);
+
+
+                playerCloseness = 21 - playerHandValue;
+                dealerCloseness = 21 - dealerHandValue;
+                if (dealerCloseness < playerCloseness && dealerHandValue <= 21)
                 {
                     Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
                 }
@@ -361,6 +395,24 @@ namespace BlackJackCS
                 {
                     Console.WriteLine("\nTIE! Dealer wins. ");
                 }
+                else if (playerHandValue <= 21)
+                {
+                    Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+                }
+
+
+                // if (playerHandValue == winningHand && playerHandValue < 21 && playerHandValue != dealerHandValue)
+                // {
+                //     Console.WriteLine($"\nCongratulations!\nYou win with {playerHandValue} points!\n ");
+                // }
+                // if (dealerHandValue == winningHand && dealerHandValue < 21)
+                // {
+                //     Console.WriteLine($"Dealer wins with {dealerHandValue} points.\n ");
+                // }
+                // if (dealerHandValue == playerHandValue)
+                // {
+                //     Console.WriteLine("\nTIE! Dealer wins. ");
+                // }
 
                 Console.WriteLine("\nWould you like to play again? [Y/N]\n ");
 
